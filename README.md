@@ -45,3 +45,16 @@ The full outline lives in [`specs/plan.md`](specs/plan.md).
 - B7 `l07_data` — kyo-data: `Maybe`, `Result`, `Chunk`, `Duration`, `Instant`
 - B8 `l08_capstone` — **Capstone**: a bank-account CLI combining `Abort`, `Env`, `Var` and `Sync`.
   Once solved, play with it: `sbt "exercises/runMain course.beginner.l08_capstone.BankApp"`
+
+### Intermediate — Composing and concurrency
+- I1 `l01_stacking` — Stacking effects: handler order (`Var` + `Abort`), handling inside vs outside loops, transactions
+- I2 `l02_choice_emit` — `Choice` (non-determinism, search, N-queens) and `Emit` (generators, logs); `Var` inside vs outside `Choice`
+- I3 `l03_stream` — `Stream`: building, transforming, consuming, laziness (and its per-chunk pitfall), custom operators via `Emit`
+- I4 `l04_async` — `Async` and fibers: sleep, parallel `foreach`/`zip`, `race` vs `raceFirst`, timeouts, `Fiber.init` and interruption
+- I5 `l05_concurrency` — Concurrency primitives: atomics, `Queue`, `Channel`, `Hub`, `Meter` (mutex, semaphore), `Latch`
+- I6 `l06_scope` — `Scope` and resources: `acquireRelease`, reverse-order release, cleanup on failure / panic / interruption, `Scope.ensure`
+- I7 `l07_layer` — `Layer`: building, wiring (`to` / `and` / `Layer.init`), running, memoization and its pitfalls
+- I8 `l08_resilience` — Resilience: `Schedule` policies, `Retry` (selective by error type), periodic tasks, `Log` (async, levels, test logger)
+- I9 `l09_testing` — Testing Kyo code: unsafe runners, `Result` assertions, console and randomness, virtual time with `Clock.withTimeControl`
+- I10 `l10_capstone` — **Capstone**: a concurrent job pipeline (channels, worker fibers, timeouts, selective retries, logging).
+  Once solved, watch it run: `sbt "exercises/runMain course.intermediate.l10_capstone.PipelineApp"`
