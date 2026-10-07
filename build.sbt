@@ -42,3 +42,14 @@ lazy val solutions = project
   .in(file("modules/solutions"))
   .dependsOn(lessons)
   .settings(commonSettings, sharedTests)
+
+// Minimal reproductions of Kyo issues found while writing the course (see modules/repro/REPORT.md).
+// Deliberately standalone: default compiler options, no dependency on the course, not aggregated by root.
+lazy val repro = project
+  .in(file("modules/repro"))
+  .settings(
+    libraryDependencies ++= Dependencies.core,
+    run / fork := true,
+    // A small heap makes the runaway in Repro3 fail in seconds rather than minutes.
+    run / javaOptions += "-Xmx256m"
+  )

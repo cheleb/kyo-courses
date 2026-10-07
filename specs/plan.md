@@ -58,3 +58,20 @@ modules/
 | A6 | Stack safety & performance   | `Loop`, `Kyo` ops, `Arrow` |
 | A7 | Rebuilding the basics        | mini `Abort` and `Var` on the kernel |
 | A8 | Capstone: custom effect      | e.g. `Cache` / `Transaction` with multiple handlers |
+
+## Status (2026-10-07)
+
+All 26 lessons (B1–B8, I1–I10, A1–A8) are implemented: 237 tests, all green on `solutions/testFull`, all red
+(one failure per test) on `exercises/testFull`.
+
+## Kyo RC7 behaviours worth reporting upstream
+
+Found while writing the course; each is documented in the relevant lesson. Draft issues and minimal
+reproductions: `modules/repro/REPORT.md` (`sbt "repro/runMain repro.<ReproN...>"`).
+
+1. **`Layer.from` with an ascribed type fails at runtime** (I7). `val l: Layer[C, Env[A & B]] = Layer.from((a: A, b: B) => ...)`
+   compiles, but type inference picks `A = A & B` and the layer fails with "missing value of type A & B".
+2. **Layer memoization is per instance** (I7). With `def` layers, `Layer.init` builds a shared dependency once per
+   dependent instead of once.
+3. **Multi-shot `handleCont` does not fail cleanly** (A3). The docs say a second resumption is refused; in practice a
+   small two-flip example ran ~80 s and died with `OutOfMemoryError`.

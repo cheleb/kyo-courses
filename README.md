@@ -58,3 +58,13 @@ The full outline lives in [`specs/plan.md`](specs/plan.md).
 - I9 `l09_testing` — Testing Kyo code: unsafe runners, `Result` assertions, console and randomness, virtual time with `Clock.withTimeControl`
 - I10 `l10_capstone` — **Capstone**: a concurrent job pipeline (channels, worker fibers, timeouts, selective retries, logging).
   Once solved, watch it run: `sbt "exercises/runMain course.intermediate.l10_capstone.PipelineApp"`
+
+### Advanced — Inside the kernel
+- A1 `l01_pending_internals` — How `A < S` works: representation, handlers and the evaluation loop, stack safety, `Frame`, `Tag`
+- A2 `l02_arrow_effect` — `ArrowEffect`: declaring effects, `suspend`, handlers with `handleCont`, early exit, effect translation
+- A3 `l03_handlers` — Writing handlers: `handleLoop`, `handleLoopState` (state, `done`), `Loop.done` exits, `handleContRepeated` (multi-shot), `recover`
+- A4 `l04_context` — `ContextEffect`: required vs defaulted reads, dynamic scoping, derived bindings, inheritable vs non-inheritable across fibers
+- A5 `l05_isolate` — Effects across fibers: `Isolate` policies for `Var` (update, merge, discard) and `Emit`, composition with `andThen`
+- A6 `l06_loop` — Stack safety and performance: `Loop` (≈50× faster than recursion here), early-exit `Kyo.*` operations, composable and recursive `Arrow`s
+- A7 `l07_rebuild` — Rebuilding the basics: `Emit` and `Env` rebuilt in the lesson, `Abort` and `Var` in the exercises, checked against the real ones
+- A8 `l08_capstone` — **Capstone**: designing an effect: typed operations (GADT + `Id`), several interpreters, forwarding decorators
