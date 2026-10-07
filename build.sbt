@@ -13,7 +13,8 @@ lazy val commonSettings = Seq(
   // Kyo's scheduler is a JVM-wide singleton; running tests in sbt's layered classloaders makes
   // it log LinkageErrors. A forked JVM keeps the output clean.
   Test / fork := true,
-  run / fork  := true,
+  run / fork         := true,
+  run / connectInput := true,
   libraryDependencies ++= Dependencies.core,
   libraryDependencies += "org.scalameta" %% "munit" % "1.0.0" % Test
 )
