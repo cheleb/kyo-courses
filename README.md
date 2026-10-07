@@ -38,3 +38,5 @@ The full outline lives in [`specs/plan.md`](specs/plan.md).
 - B1 `l01_hello` — Hello Kyo: `KyoApp`, `Console`, sequencing
 - B2 `l02_pending` — The pending type `A < S`
 - B3 `l03_sync` — `Sync`: controlled side effects, `Clock`, `Random`, deterministic testing
+- B4 `l04_abort` — `Abort`: typed failures, `Result`, recovering, exceptions and panics
+- B5 `l05_env` — `Env`: dependency injection, providing production vs test services
