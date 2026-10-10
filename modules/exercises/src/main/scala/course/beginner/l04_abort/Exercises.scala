@@ -11,24 +11,37 @@ object Exercises:
   /** Ex 1: return `age` unchanged if it is between 0 and 150 included. Otherwise fail with `AgeError.Negative`
     * or `AgeError.TooOld`. Hint: `Abort.when` or `Abort.fail`.
     */
-  def checkAge(age: Int): Int < Abort[AgeError] = ???
+  def checkAge(age: Int): Int < Abort[AgeError] = 
+    for
+      _ <- Abort.when(age < 0)(AgeError.Negative(age))
+      _ <- Abort.when(age > 150)(AgeError.TooOld(age))
+    yield age
 
   /** Ex 2: convert `input` to an `Int` with `input.toInt`, turning a `NumberFormatException` into
     * `AgeError.NotANumber(input)`. Hint: `Abort.catching`.
     */
-  def parseInt(input: String): Int < Abort[AgeError] = ???
+  def parseInt(input: String): Int < Abort[AgeError] = 
+    Abort.catching[NumberFormatException](_ => AgeError.NotANumber(input))(
+      input.toInt
+    )
 
   /** Ex 3: parse then check an age, reusing `parseInt` and `checkAge`. */
-  def parseAge(input: String): Int < Abort[AgeError] = ???
+  def parseAge(input: String): Int < Abort[AgeError] = 
+    for
+      age <- parseInt(input)
+      valid <- checkAge(age)
+    yield valid
 
   /** Ex 4: handle the `Abort` effect of `parseAge`: the result is a plain `Result`. Hint: `Abort.run`, `.eval`. */
-  def safeParseAge(input: String): Result[AgeError, Int] = ???
+  def safeParseAge(input: String): Result[AgeError, Int] = 
+    Abort.run[AgeError](parseAge(input)).eval
 
   /** Ex 5: parse an age, falling back to `0` when it is invalid. Hint: `Abort.recover`.
     *
     * The remaining `Abort[Nothing]` means "may still panic": recovering from `AgeError` does not handle panics.
     */
-  def ageOrZero(input: String): Int < Abort[Nothing] = ???
+  def ageOrZero(input: String): Int < Abort[Nothing] = 
+    parseAge(input).recover(_ => 0)
 
   /** Ex 6: describe the outcome of `parseAge`:
     *   - `"age: 42"` for a valid age,
@@ -36,17 +49,29 @@ object Exercises:
     *
     * Hint: `Abort.fold`, then a `match` on the error.
     */
-  def describe(input: String): String < Abort[Nothing] = ???
+  def describe(input: String): String < Abort[Nothing] = 
+    Abort.fold[AgeError](
+      age => s"age: $age",
+      {
+      case AgeError.NotANumber(input) => s"not a number: $input"
+      case AgeError.Negative(age) => s"negative: $age"
+      case AgeError.TooOld(age) => s"too old: $age"
+      }
+    )(parseAge)
 
   /** Ex 7: find the raw age of `name` in `users`; fail with `"unknown user: <name>"` if it is missing.
     * Hint: `Abort.get` with an `Either`.
     */
-  def findUser(users: Map[String, String], name: String): String < Abort[String] = ???
+  def findUser(users: Map[String, String], name: String): String < Abort[String] = 
+    Abort.get(users.get(name).toRight(s"unknown user: $name"))
 
   /** Ex 8: find the user, then parse their age. Both error types end up in the effect row. */
-  def userAge(users: Map[String, String], name: String): Int < Abort[String | AgeError] = ???
+  def userAge(users: Map[String, String], name: String): Int < Abort[String | AgeError] =
+    findUser(users, name).map(parseAge)
+
 
   /** Ex 9: like `userAge`, but an unknown user gives `-1`. Age errors must stay unhandled. */
-  def userAgeOrUnknown(users: Map[String, String], name: String): Int < Abort[AgeError] = ???
+  def userAgeOrUnknown(users: Map[String, String], name: String): Int < Abort[AgeError] = 
+    Abort.recover[String](_ => -1)(userAge(users, name)) // REDO...
 
 end Exercises
